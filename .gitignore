@@ -1,0 +1,6 @@
+# Ignore Visual Studio .vs folder
+.vs/
+
+# Ignore bin and obj folders in EmployeeService
+EmployeeService/bin/
+EmployeeService/obj/
