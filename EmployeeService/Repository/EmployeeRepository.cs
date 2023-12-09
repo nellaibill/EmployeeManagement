@@ -40,7 +40,7 @@ namespace EmployeeService.Repository
                     catch(Exception ex)
                     {
                         logger.LogError(ex.ToString());
-                        employees = null;
+                        return null;
                     }
                 }
             }
