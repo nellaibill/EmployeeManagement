@@ -91,5 +91,39 @@ namespace EmployeeServiceTests
             // Assert
             Assert.IsNull(result);
         }
+
+
+        [TestMethod]
+        public void GetEmployeeById_ResultShould_NotBeNull()
+        {
+            _mockConfiguration.Setup(c => c["GoRest:URL"]).Returns("http:example.com");
+            _mockConfiguration.Setup(c => c["GoRest:Token"]).Returns("xyz");
+            var employeeRepository = new EmployeeRepository(_mockConfiguration.Object, _mockMapper, _mockLogger.Object);
+
+            Employee employee = new Employee()
+            {
+                Email = "abc@gmail.com",
+                Gender = "Male",
+                Id = 1,
+                Name = "Test",
+                Status = "Test Status"
+            };
+            var handlerMock = new Mock<HttpMessageHandler>();
+            var response = new HttpResponseMessage
+            {
+                Content = new StringContent(JsonSerializer.Serialize(employee)),
+                StatusCode = System.Net.HttpStatusCode.OK
+            };
+            handlerMock
+               .Protected()
+               .Setup<Task<HttpResponseMessage>>(
+                 "SendAsync",
+                 ItExpr.IsAny<HttpRequestMessage>(),
+                 ItExpr.IsAny<CancellationToken>())
+               .ReturnsAsync(response);
+            var result = employeeRepository.GetEmployee(1);
+            Assert.IsNotNull(result);
+        }
+
     }
 }

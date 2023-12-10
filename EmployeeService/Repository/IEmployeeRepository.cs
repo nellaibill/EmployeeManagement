@@ -6,5 +6,7 @@ namespace EmployeeService.Repository
     {
        public  Task<List<EmployeeDTO>> GetAllEmployees();
 
+        public Task<EmployeeDTO> GetEmployee(int id);
+
     }
 }

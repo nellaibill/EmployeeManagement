@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EmployeeService.DTO;
 using EmployeeService.Models;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace EmployeeService.Repository
@@ -25,10 +26,7 @@ namespace EmployeeService.Repository
 
             using (var client = new HttpClient())
             {
-                var URL = configuration["GoRest:URL"];
-                var Token = configuration["GoRest:Token"];
-                client.BaseAddress = new Uri(URL);
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Token);
+                GetDefaultHeaders(client);
 
                 using (HttpResponseMessage httpResponseMessage = await client.GetAsync("users"))
                 {
@@ -45,6 +43,39 @@ namespace EmployeeService.Repository
                 }
             }
             return mapper.Map<List<EmployeeDTO>>(employees);
+        }
+        [HttpGet]
+        
+        public async Task<EmployeeDTO> GetEmployee(int id)
+        {
+            var employees = new Employee();
+            using (var client = new HttpClient())
+            {
+                GetDefaultHeaders(client);
+
+                using (HttpResponseMessage httpResponseMessage = await client.GetAsync($"users/{id}"))
+                {
+                    try
+                    {
+                        var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
+                        employees = JsonConvert.DeserializeObject<Employee>(responseContent);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex.ToString());
+                        return null;
+                    }
+                }
+            }
+            return mapper.Map<EmployeeDTO>(employees);
+        }
+
+        private void GetDefaultHeaders(HttpClient client)
+        {
+            var URL = configuration["GoRest:URL"];
+            var Token = configuration["GoRest:Token"];
+            client.BaseAddress = new Uri(URL);
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Token);
         }
     }
 }

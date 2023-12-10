@@ -22,5 +22,15 @@ namespace EmployeeService.Controllers
 
             return Ok(employees);
         }
+
+        [HttpGet("{id:int}")]
+        
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetEmployeeById(int id )
+        {
+            var employees = await employeeRepository.GetEmployee(id);
+
+            return Ok(employees);
+        }
     }
 }
