@@ -32,5 +32,14 @@ namespace EmployeeService.Controllers
 
             return Ok(employees);
         }
+
+        [HttpPut]
+
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> UpdateEmployee([FromBody] UpdateRequestDTO updateRequestDTO)
+        {
+            var employees = await employeeRepository.UpdateEmployee(updateRequestDTO);
+
+            return Ok(employees);
+        }
     }
 }

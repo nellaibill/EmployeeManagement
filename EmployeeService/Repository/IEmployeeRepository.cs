@@ -8,5 +8,7 @@ namespace EmployeeService.Repository
 
         public Task<EmployeeDTO> GetEmployee(int id);
 
+        public Task<EmployeeDTO> UpdateEmployee(UpdateRequestDTO updateRequestDTO);
+
     }
 }
